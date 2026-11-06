@@ -13,6 +13,7 @@ import { UserSettingsProvider } from '@/contexts/UserSettingsContext';
 import { AuthGuard, PublicOnlyGuard } from '@/components/guards/AuthGuard';
 import { ModuleGuard } from '@/components/guards/ModuleGuard';
 import { Toaster } from 'sonner';
+import { Toaster as RadixToaster } from '@/components/ui/toaster';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Lock, ShieldAlert } from 'lucide-react';
@@ -464,6 +465,7 @@ export default function App() {
                         </Routes>
                       </Suspense>
                       <Toaster position="top-right" richColors />
+                      <RadixToaster />
                       <CommandPalette />
                     </SubscriptionProvider>
                   </LanguageProvider>

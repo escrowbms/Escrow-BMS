@@ -78,6 +78,8 @@ import {
   Sun,
   Moon,
   Eye,
+  EyeOff,
+  AlertCircle,
   X,
   CreditCard as PaymentIcon,
   Zap,
@@ -108,6 +110,7 @@ import { generateAccountId } from "@/utils/accountId";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useToast } from "@/hooks/use-toast";
+import { toast as sonnerToast } from "sonner";
 import { safelyToLocaleDate } from "@/utils/dateUtils";
 import { InvoiceTemplate } from "@/components/InvoiceTemplate";
 import { ResponsiveInvoiceWrapper } from "@/components/ResponsiveInvoiceWrapper";
@@ -440,6 +443,11 @@ const SettingsPage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordChanging, setPasswordChanging] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isConfirmTemplateModalOpen, setIsConfirmTemplateModalOpen] = useState(false);
   const [confirmTemplateCheck, setConfirmTemplateCheck] = useState(false);
   const [pendingTemplateId, setPendingTemplateId] = useState<UserSettings['invoice_template'] | null>(null);
@@ -1660,59 +1668,79 @@ const SettingsPage = () => {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPasswordError(null);
+    setPasswordSuccess(null);
+
+    if (!currentPassword) {
+      setPasswordError("Please enter your current password.");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "New passwords do not match."
-      });
+      setPasswordError("New passwords do not match. Please verify both fields.");
       return;
     }
 
     if (newPassword.length < 8) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Password must be at least 8 characters long."
-      });
+      setPasswordError("New password must be at least 8 characters long.");
+      return;
+    }
+
+    if (newPassword === currentPassword) {
+      setPasswordError("New password must be different from your current password.");
       return;
     }
 
     setPasswordChanging(true);
     try {
-      // Step 1: Verify current password by attempting to sign in
+      // Step 1: Resolve authenticated user email
+      const { data: authUserData } = await supabase.auth.getUser();
+      const targetEmail = authUserData?.user?.email || user?.email || (profile as any)?.email;
+
+      if (!targetEmail) {
+        throw new Error("Unable to identify active user email. Please refresh the page or re-login.");
+      }
+
+      // Step 2: Verify current password by authenticating
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: user?.email || '',
+        email: targetEmail,
         password: currentPassword,
       });
 
       if (signInError) {
-        throw new Error("Incorrect current password.");
+        const lowerErr = (signInError.message || '').toLowerCase();
+        if (lowerErr.includes("invalid login credentials") || lowerErr.includes("invalid_grant")) {
+          throw new Error("Current password is incorrect. Please verify your password and try again.");
+        }
+        throw new Error(signInError.message || "Failed to verify current password.");
       }
 
-      // Step 2: Update to new password
+      // Step 3: Update to new password
       const { error: updateError } = await supabase.auth.updateUser({
         password: newPassword
       });
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        throw new Error(updateError.message || "Failed to update password.");
+      }
 
-      toast({
-        title: "Success",
-        description: "Your password has been updated successfully."
-      });
+      setPasswordSuccess("Password updated successfully!");
+      sonnerToast.success("Password updated successfully!");
 
-      // Reset state and close modal
-      setIsPasswordModalOpen(false);
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to update password."
-      });
+      // Auto close modal after brief delay so user sees confirmation
+      setTimeout(() => {
+        setIsPasswordModalOpen(false);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setPasswordError(null);
+        setPasswordSuccess(null);
+      }, 1400);
+
+    } catch (error: any) {
+      const errorMsg = error instanceof Error ? error.message : "Failed to update password.";
+      setPasswordError(errorMsg);
+      sonnerToast.error(errorMsg);
     } finally {
       setPasswordChanging(false);
     }
@@ -3541,7 +3569,19 @@ const SettingsPage = () => {
                           <p className="text-[11px] text-muted-foreground">Update account login password</p>
                         </div>
                       </div>
-                      <Dialog open={isPasswordModalOpen} onOpenChange={setIsPasswordModalOpen}>
+                      <Dialog open={isPasswordModalOpen} onOpenChange={(open) => {
+                        setIsPasswordModalOpen(open);
+                        if (!open) {
+                          setPasswordError(null);
+                          setPasswordSuccess(null);
+                          setCurrentPassword('');
+                          setNewPassword('');
+                          setConfirmPassword('');
+                          setShowCurrentPassword(false);
+                          setShowNewPassword(false);
+                          setShowConfirmPassword(false);
+                        }
+                      }}>
                         <DialogTrigger asChild>
                           <Button variant="outline" size="sm" className="h-8 rounded-md font-bold text-[10px] uppercase tracking-wider px-3 border-border/70">
                             Change Password
@@ -3557,45 +3597,106 @@ const SettingsPage = () => {
                               Protect your account with a secure, high-entropy password
                             </DialogDescription>
                           </div>
-                          <form onSubmit={handlePasswordChange} className="p-4 md:p-8 space-y-5">
+                          <form onSubmit={handlePasswordChange} className="p-4 md:p-8 space-y-4">
+                            {/* In-Modal Error Message */}
+                            {passwordError && (
+                              <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-start gap-2.5 animate-in fade-in duration-200">
+                                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-500" />
+                                <span className="flex-1 leading-relaxed">{passwordError}</span>
+                              </div>
+                            )}
+
+                            {/* In-Modal Success Message */}
+                            {passwordSuccess && (
+                              <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-start gap-2.5 animate-in fade-in duration-200">
+                                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-500" />
+                                <span className="flex-1 leading-relaxed">{passwordSuccess}</span>
+                              </div>
+                            )}
+
                             <div className="space-y-1.5">
                               <Label htmlFor="current-password">Current Password</Label>
-                              <Input
-                                id="current-password"
-                                type="password"
-                                autoComplete="current-password"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                                required
-                                className="h-10 rounded-md bg-background border border-input text-xs"
-                              />
+                              <div className="relative">
+                                <Input
+                                  id="current-password"
+                                  type={showCurrentPassword ? "text" : "password"}
+                                  autoComplete="current-password"
+                                  value={currentPassword}
+                                  onChange={(e) => {
+                                    setCurrentPassword(e.target.value);
+                                    if (passwordError) setPasswordError(null);
+                                  }}
+                                  placeholder="Enter your current password"
+                                  required
+                                  className="h-10 rounded-md bg-background border border-input text-xs pr-10"
+                                />
+                                <button
+                                  type="button"
+                                  tabIndex={-1}
+                                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5"
+                                >
+                                  {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                              </div>
                             </div>
+
                             <div className="space-y-1.5">
                               <Label htmlFor="new-password">New Password</Label>
-                              <Input
-                                id="new-password"
-                                type="password"
-                                autoComplete="new-password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                required
-                                minLength={8}
-                                className="h-10 rounded-md bg-background border border-input text-xs"
-                              />
+                              <div className="relative">
+                                <Input
+                                  id="new-password"
+                                  type={showNewPassword ? "text" : "password"}
+                                  autoComplete="new-password"
+                                  value={newPassword}
+                                  onChange={(e) => {
+                                    setNewPassword(e.target.value);
+                                    if (passwordError) setPasswordError(null);
+                                  }}
+                                  placeholder="Minimum 8 characters"
+                                  required
+                                  minLength={8}
+                                  className="h-10 rounded-md bg-background border border-input text-xs pr-10"
+                                />
+                                <button
+                                  type="button"
+                                  tabIndex={-1}
+                                  onClick={() => setShowNewPassword(!showNewPassword)}
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5"
+                                >
+                                  {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                              </div>
                             </div>
+
                             <div className="space-y-1.5">
                               <Label htmlFor="confirm-password">Confirm New Password</Label>
-                              <Input
-                                id="confirm-password"
-                                type="password"
-                                autoComplete="new-password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                                minLength={8}
-                                className="h-10 rounded-md bg-background border border-input text-xs"
-                              />
+                              <div className="relative">
+                                <Input
+                                  id="confirm-password"
+                                  type={showConfirmPassword ? "text" : "password"}
+                                  autoComplete="new-password"
+                                  value={confirmPassword}
+                                  onChange={(e) => {
+                                    setConfirmPassword(e.target.value);
+                                    if (passwordError) setPasswordError(null);
+                                  }}
+                                  placeholder="Re-enter new password"
+                                  required
+                                  minLength={8}
+                                  className="h-10 rounded-md bg-background border border-input text-xs pr-10"
+                                />
+                                <button
+                                  type="button"
+                                  tabIndex={-1}
+                                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5"
+                                >
+                                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                              </div>
                             </div>
+
                             <DialogFooter className="pt-2">
                               <Button type="submit" disabled={passwordChanging} className="w-full h-10 rounded-md bg-primary text-primary-foreground font-semibold uppercase tracking-wider text-xs shadow-xs">
                                 {passwordChanging ? (

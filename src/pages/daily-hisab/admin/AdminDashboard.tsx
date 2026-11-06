@@ -260,7 +260,7 @@ export const AdminDashboard = () => {
             <CardContent>
               <div className="text-2xl font-bold text-purple-600">{stats.totalCalculations}</div>
               <p className="text-xs text-muted-foreground">
-                Hisab entries in system
+                Calculation entries in system
               </p>
             </CardContent>
           </Card>

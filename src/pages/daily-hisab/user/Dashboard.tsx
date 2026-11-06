@@ -226,7 +226,7 @@ export const Dashboard = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3 sm:gap-4">
-            <img src="/logo.png" alt="Escrow Daily Hisab" className="w-10 h-10 sm:w-12 sm:h-12" />
+            <img src="/logo.png" alt="Escrow Daily Calculation" className="w-10 h-10 sm:w-12 sm:h-12" />
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold">Financial Dashboard</h1>
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
@@ -279,7 +279,7 @@ export const Dashboard = () => {
                   Daily Calculation
                 </CardTitle>
                 <CardDescription className="text-sm">
-                  Enter your financial values to calculate today's hisab
+                  Enter your financial values to calculate today's balance
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
@@ -309,7 +309,7 @@ export const Dashboard = () => {
                     </div>
                   </div>
 
-                  {/* Second Group: Bank Balance, Upar Jama/RTGS, Extra Expenses */}
+                  {/* Second Group: Bank Balance, Additional Deposit, Extra Expenses */}
                   <div>
                     <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-accent">
                       Expenses & Transfers
@@ -357,7 +357,7 @@ export const Dashboard = () => {
                       </span>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:justify-between gap-1 text-base sm:text-lg font-semibold pt-2 border-t">
-                      <span>Today's Hisab (Net Amount):</span>
+                      <span>Today's Net Balance:</span>
                       <span
                         className={`font-mono text-lg ${results.todayHisab >= 0 ? "text-profit" : "text-loss"
                           }`}
@@ -381,11 +381,11 @@ export const Dashboard = () => {
 
           {/* Summary Cards */}
           <div className="space-y-3 sm:space-y-6">
-            {/* Today's Hisab */}
+            {/* Today's Balance */}
             <Card className="shadow-card">
               <CardHeader className="pb-2 sm:pb-3">
                 <CardTitle className="text-sm font-medium">
-                  Today's Hisab
+                  Today's Balance
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
@@ -405,11 +405,11 @@ export const Dashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Previous Hisab */}
+            {/* Previous Balance */}
             <Card className="shadow-card">
               <CardHeader className="pb-2 sm:pb-3">
                 <CardTitle className="text-sm font-medium">
-                  Previous Hisab
+                  Previous Balance
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">

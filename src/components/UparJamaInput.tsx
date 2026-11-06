@@ -280,9 +280,9 @@ export const UparJamaInput = ({ value, onChange, onEntriesChange, resetTrigger }
 
   return (
     <div className="space-y-1">
-      {/* Upar Jama Display with Plus Button */}
+      {/* Additional Deposit Display with Plus Button */}
       <div>
-        <Label className="text-sm font-medium">Upar Jama / RTGS</Label>
+        <Label className="text-sm font-medium">Additional Deposit / Bank Transfer</Label>
         <div className="relative">
           <Input
             type="text"

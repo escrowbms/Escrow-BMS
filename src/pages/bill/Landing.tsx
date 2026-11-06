@@ -1534,7 +1534,7 @@ const Landing = () => {
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-slate-650 dark:text-slate-400 mb-10 leading-relaxed max-w-2xl font-medium">
-                Dhandhe ka hisab-kitab, ab bina kisi sir-dard ke. Create beautiful GST-compliant bills in under 10 seconds, send automatic payment reminders on WhatsApp, and manage stock levels in real-time. Built specifically for Indian traders, wholesalers, and service business owners.
+                Effortless business accounting and invoices, without any hassle. Create beautiful GST-compliant bills in under 10 seconds, send automatic payment reminders on WhatsApp, and manage stock levels in real-time. Built specifically for modern traders, wholesalers, and service business owners.
               </p>
 
 

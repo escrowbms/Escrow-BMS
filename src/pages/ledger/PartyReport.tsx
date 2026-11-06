@@ -519,7 +519,7 @@ const PartyReport = () => {
                         ₹ {Math.abs(Math.round(bal)).toLocaleString('en-IN')}
                       </span>
                       <span className={`text-[9px] font-black uppercase tracking-wider ${isCr ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
-                        {isCr ? 'Credit (जमा)' : 'Debit (बाकी)'}
+                        {isCr ? 'Credit (Payable)' : 'Debit (Receivable)'}
                       </span>
                     </div>
                   </td>

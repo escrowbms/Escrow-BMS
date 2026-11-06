@@ -256,7 +256,7 @@ export const History = () => {
             "Extra Expenses",
             "Coin Report",
             "Fund Report",
-            "Today's Hisab",
+            "Today's Balance",
             "Difference",
           ],
         ],
@@ -512,7 +512,7 @@ export const History = () => {
       doc.setTextColor(0, 0, 0);
       yPos += 12; // More spacing for spread
 
-      // 3-Column layout for portrait: Bank Balance | Upar Jama/RTGS | Extra Expenses - Better spacing
+      // 3-Column layout for portrait: Bank Balance | Additional Deposit/RTGS | Extra Expenses - Better spacing
       const expenseCol1X = 15;
       const expenseCol2X = 75;
       const expenseCol3X = 135;
@@ -530,10 +530,10 @@ export const History = () => {
       doc.setFontSize(7); // Much smaller font
       doc.text(`${entry.A1}`, expenseCol1X + 39, yPos - 1, { align: 'center' });
 
-      // Upar Jama / RTGS (Column 2) - Portrait spacing
+      // Additional Deposit / RTGS (Column 2) - Portrait spacing
       doc.setFontSize(10);
       doc.setFont("helvetica", "bold");
-      doc.text("Upar Jama / RTGS", expenseCol2X, yPos);
+      doc.text("Additional Deposit / RTGS", expenseCol2X, yPos);
       doc.setFillColor(220, 252, 231);
       doc.rect(expenseCol2X + 35, yPos - 6, 20, 8, 'F'); // Smaller box
       doc.setDrawColor(34, 197, 94);
@@ -720,7 +720,7 @@ export const History = () => {
       doc.rect(summaryStartX, yPos, fullWidth, thinnerHeight + 8);
       doc.setFontSize(8); // Font for label
       doc.setFont("helvetica", "bold");
-      doc.text("Today's Hisab:", summaryStartX + 8, yPos + 12, { align: 'left' });
+      doc.text("Today's Balance:", summaryStartX + 8, yPos + 12, { align: 'left' });
       doc.setFontSize(10); // Font for amount
       if (entry.todayHisab >= 0) {
         doc.setTextColor(34, 197, 94);
@@ -836,7 +836,7 @@ export const History = () => {
       <div className="space-y-6 animate-fade-in">
         {/* Header */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <img src="/logo.png" alt="Escrow Daily Hisab" className="w-10 h-10 sm:w-12 sm:h-12" />
+          <img src="/logo.png" alt="Escrow Daily Calculation" className="w-10 h-10 sm:w-12 sm:h-12" />
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Financial History</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
@@ -1061,7 +1061,7 @@ export const History = () => {
                         <div className="text-center sm:text-right">
                           <div className="flex items-center justify-center sm:justify-end space-x-2">
                             <span className="text-base sm:text-lg font-bold">
-                              Today's Hisab
+                              Today's Balance
                             </span>
                           </div>
                           <div
@@ -1242,10 +1242,10 @@ export const History = () => {
                                           )}
                                         </div>
 
-                                        {/* Upar Jama / RTGS */}
+                                        {/* Additional Deposit / RTGS */}
                                         <div className="space-y-2">
                                           <div className="flex items-center justify-between">
-                                            <Label className="text-sm font-medium">Upar Jama / RTGS</Label>
+                                            <Label className="text-sm font-medium">Additional Deposit / RTGS</Label>
                                             <div className="text-lg font-mono bg-green-50 px-2 py-1 rounded">
                                               {viewingEntry.B1}
                                             </div>
@@ -1334,10 +1334,10 @@ export const History = () => {
                                         </div>
                                       </div>
 
-                                      {/* Today's Hisab Card - Full Width Horizontal */}
+                                      {/* Today's Balance Card - Full Width Horizontal */}
                                       <div className="w-full p-4 bg-muted rounded-lg">
                                         <div className="flex items-center justify-center gap-4">
-                                          <Label className="text-lg font-medium">Today's Hisab:</Label>
+                                          <Label className="text-lg font-medium">Today's Balance:</Label>
                                           <p className={`text-3xl font-bold ${viewingEntry.todayHisab >= 0 ? "text-green-600" : "text-red-600"}`}>
                                             {viewingEntry.todayHisab >= 0 ? "+" : ""}{viewingEntry.todayHisab}
                                           </p>

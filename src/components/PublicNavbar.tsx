@@ -177,7 +177,7 @@ export const PublicNavbar = () => {
                       <BookOpen className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-900 dark:text-white">Party Ledgers &amp; Khata</div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">Party Ledgers &amp; Accounts</div>
                       <div className="text-[11px] text-slate-500 dark:text-slate-400">Running balances &amp; auto-posting</div>
                     </div>
                   </button>

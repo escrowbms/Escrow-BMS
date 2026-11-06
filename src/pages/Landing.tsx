@@ -154,8 +154,8 @@ const CORE_SERVICES = [
     id: 'ledger',
     badge: 'Automated',
     badgeColor: 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
-    title: 'Party Khata & Ledgers',
-    desc: 'Automated double-entry accounting. Invoices and payments instantly post to customer & vendor running khata with zero manual data entry.',
+    title: 'Party Ledgers & Accounts',
+    desc: 'Automated double-entry accounting. Invoices and payments instantly post to customer & vendor running ledgers with zero manual data entry.',
     icon: BookOpen,
     iconBg: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
     features: [
@@ -257,7 +257,7 @@ const INDUSTRIES = [
     tagline: 'Manage 10,000+ line items, tiered party pricing, and instant GST invoices in 60 seconds.',
     points: [
       'Custom party-wise discount rates and credit days',
-      'Automated Khata debit/credit ledger posting on billing',
+      'Automated party debit/credit ledger posting on billing',
       'Multi-warehouse stock deduction upon dispatch',
       'Bulk WhatsApp payment reminders with UPI QR links'
     ]
@@ -335,7 +335,7 @@ const TESTIMONIALS = [
     role: 'Managing Director',
     company: 'Agarwal Textiles Ltd',
     city: 'Surat, Gujarat',
-    quote: 'Hum pehle Tally aur Excel dono use karte the, jismein har roz 2-3 ghante party ledger match karne mein nikal jaate the. Escrow BMS par aane ke baad invoice bante hi party khata aur stock dono realtime update ho jaate hain.',
+    quote: 'We used to juggle between legacy accounting software and spreadsheets, spending 2-3 hours daily reconciling party statements. With Escrow BMS, invoices automatically update both party ledgers and inventory in real-time.',
     metric: 'Saved 3.5 hrs/day',
     rating: 5,
     tag: 'Textile & Wholesale'
@@ -345,7 +345,7 @@ const TESTIMONIALS = [
     role: 'Founder & CEO',
     company: 'Apex Pharma Distributors',
     city: 'Ludhiana, Punjab',
-    quote: 'Batch and expiry tracking pharmaceutical business mein sabse critical hai. Escrow BMS ka E-Invoicing aur WhatsApp share feature hamare 450+ medical store clients ke payments ko 18 din mein settle karwa raha hai.',
+    quote: 'Batch and expiry tracking are mission-critical for our distribution network. Escrow BMS automated invoicing and instant WhatsApp dispatch helped our 450+ client pharmacies settle receivables in record time.',
     metric: '2.4x Faster Collections',
     rating: 5,
     tag: 'Pharma Distribution'
@@ -355,8 +355,8 @@ const TESTIMONIALS = [
     role: 'Chartered Accountant & Financial Advisor',
     company: 'Sundaram & Associates',
     city: 'Chennai / Bengaluru',
-    quote: 'As a CA, month-end GSTR reconciliation was our biggest headache with client data. Escrow BMS provides 100% clean, structured books with exact CGST/SGST breakdowns and zero calculation discrepancies.',
-    metric: 'Zero GST Notice Risk',
+    quote: 'Month-end tax reconciliations used to be our biggest hurdle with client accounts. Escrow BMS provides 100% clean, structured books with exact tax breakdowns and zero calculation discrepancies.',
+    metric: 'Zero Compliance Risk',
     rating: 5,
     tag: 'Chartered Accounting'
   }
@@ -364,28 +364,28 @@ const TESTIMONIALS = [
 
 const FAQS = [
   {
-    q: 'Kya Escrow BMS se banaye gaye invoices 100% GST compliant hote hain?',
-    a: 'Haan, bilkul! Escrow BMS Indian GSTN guidelines ke anusar design kiya gaya hai. Har invoice mein proper HSN/SAC codes, CGST, SGST, IGST tax breakdown, E-Invoice IRN, dynamic UPI QR code aur government compliant format automatically generate hota hai.'
+    q: 'Are invoices created with Escrow BMS fully tax compliant?',
+    a: 'Yes, absolutely! Escrow BMS is built strictly to official tax authority standards. Every invoice includes verified HSN/SAC codes, clear tax breakdowns, E-Invoice IRN compatibility, and compliant formatting automatically.'
   },
   {
-    q: 'Kya hum Tally ya Vyapar se apna purana data Escrow BMS mein la sakte hain?',
-    a: 'Haan, humara 1-Click Excel / CSV data import tool aapke saare existing clients, vendors, product master, and opening ledger balances ko 2 minute ke andar import kar deta hai. Saath hi humari onboarding team free assisted migration provide karti hai.'
+    q: 'Can I import my existing data from legacy software into Escrow BMS?',
+    a: 'Yes, our 1-Click Excel / CSV data import tool migrates all your clients, vendors, product master catalog, and opening ledger balances in minutes, with zero downtime.'
   },
   {
-    q: 'Kya mere staff members ke liye permissions restrict ki ja sakti hain?',
-    a: 'Haan! Escrow BMS mein Role-Based Access Control hai. Aap apne sales billing staff ko sirf Invoice banane ka access de sakte hain, warehouse team ko sirf Inventory update karne ka, aur accounts ledger ya profit & loss reports sirf company owner ke liye private rakh sakte hain.'
+    q: 'Can I restrict permissions and access for staff members?',
+    a: 'Yes! Escrow BMS includes comprehensive Role-Based Access Control. You can grant sales billing staff permission to generate invoices only, warehouse teams stock management access only, and reserve profit & loss statements for administrators.'
   },
   {
-    q: 'Invoice banate hi party ke WhatsApp par kaise bhejte hain?',
-    a: 'Invoice create ya save karte hi aapko "Share on WhatsApp" ka 1-click button milta hai. Yeh customer ke WhatsApp par direct professional PDF invoice aur instant UPI payment link ke sath formal business message bhej deta hai.'
+    q: 'How does instant WhatsApp invoice dispatch work?',
+    a: 'Upon generating or saving any invoice, a 1-click WhatsApp share option instantly sends a secure PDF invoice along with direct payment instructions directly to your customer.'
   },
   {
-    q: 'Kya iske liye internet ya expensive hardware ki zaroorat hai?',
-    a: 'Escrow BMS kisi bhi basic laptop, computer, tablet ya smartphone ke browser par fast chalta hai. Iske liye kisi heavy server ya expensive configuration ki zaroorat nahi hoti.'
+    q: 'Does Escrow BMS require heavy hardware or complex setup?',
+    a: 'No. Escrow BMS is a modern web application that runs smoothly in any modern browser across laptops, desktops, tablets, and smartphones without local server overhead.'
   },
   {
-    q: 'Kya mera business data safe aur encrypted hai?',
-    a: '100% safe hai. Aapka data 256-bit bank-grade SSL encryption ke sath secure cloud servers par store hota hai jismein automatic daily backups enabled hote hain, taaki computer kharab hone par bhi aapka data hamesha surakshit rahe.'
+    q: 'Is my company data encrypted and secure?',
+    a: 'Yes. All business data is safeguarded with 256-bit bank-grade SSL encryption and automated cloud backups, ensuring your records remain secure and accessible 24/7.'
   }
 ];
 
@@ -493,7 +493,7 @@ export default function Landing() {
               {/* Main Headline */}
               <FadeUp delay={80}>
                 <h1 className="text-3xl sm:text-5xl xl:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.14]">
-                  Run Billing, Khata, Inventory &amp; Payroll{' '}
+                  Run Billing, Ledgers, Inventory &amp; Payroll{' '}
                   <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent">
                     in One Unified ERP.
                   </span>
@@ -578,7 +578,7 @@ export default function Landing() {
                             : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
                         }`}
                       >
-                        📖 Khata
+                        📖 Ledgers
                       </button>
                       <button
                         onClick={() => setActiveMockTab('inventory')}
@@ -692,7 +692,7 @@ export default function Landing() {
                       </div>
                     )}
 
-                    {/* TAB 2: LIVE PARTY KHATA PREVIEW */}
+                    {/* TAB 2: LIVE PARTY LEDGER PREVIEW */}
                     {activeMockTab === 'ledger' && (
                       <div className="space-y-4">
                         <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
@@ -952,7 +952,7 @@ export default function Landing() {
               <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white font-black flex items-center justify-center text-sm mb-4 shadow-md shadow-emerald-500/20">
                 2
               </div>
-              <h4 className="font-bold text-slate-900 dark:text-white text-base mb-1.5">Khata Auto-Posts</h4>
+              <h4 className="font-bold text-slate-900 dark:text-white text-base mb-1.5">Ledgers Auto-Post</h4>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Customer debit balance automatically updates. Payment link with dynamic UPI QR is sent directly on WhatsApp.
               </p>
@@ -1233,7 +1233,7 @@ export default function Landing() {
                     <div className="text-2xl sm:text-3xl font-black text-blue-600 dark:text-blue-400 mt-1 font-mono">
                       ₹{(moneySavedPerYear / 100000).toFixed(1)} Lakhs
                     </div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">Productivity &amp; Faster Khata</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Productivity &amp; Faster Collections</div>
                   </div>
                 </div>
               </div>
@@ -1351,7 +1351,7 @@ export default function Landing() {
             Ready to Simplify Your Entire Business?
           </h2>
           <p className="mt-3.5 text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
-            Join growing traders, manufacturers, and retailers across India managing invoices, khata, and payroll in one clean platform.
+            Join growing businesses, manufacturers, and retailers managing invoices, ledgers, and payroll in one clean platform.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">

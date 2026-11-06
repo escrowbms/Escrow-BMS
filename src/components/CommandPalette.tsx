@@ -143,7 +143,7 @@ export const CommandPalette = () => {
             className="flex items-center gap-2 cursor-pointer"
           >
             <Calculator className="h-4 w-4 text-teal-500" />
-            <span>Daily Hisab Cashbook</span>
+            <span>Daily Cashbook & Calculation</span>
           </CommandItem>
 
           <CommandItem

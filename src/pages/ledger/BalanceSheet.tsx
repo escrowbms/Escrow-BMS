@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { GlobalLoader } from '@/components/ui/GlobalLoader';
 
 interface PartyBalance {
@@ -27,6 +28,7 @@ interface PartyBalance {
 
 const BalanceSheet = () => {
   const { user } = useAuth();
+  const { currencySymbol, currencyCode } = useCurrency();
   const navigate = useNavigate();
   const [parties, setParties] = useState<PartyBalance[]>(() => {
     try {
@@ -153,9 +155,9 @@ const BalanceSheet = () => {
     return matchesSearch && matchesZero;
   });
 
-  // Separate Credit (jama / dena) and Debit (name / lena)
-  // Positive balances are Credit (jama / dena)
-  // Negative balances are Debit (name / lena)
+  // Separate Credit (Payable) and Debit (Receivable)
+  // Positive balances are Credit (Payable)
+  // Negative balances are Debit (Receivable)
   const creditParties = filteredParties.filter(p => p.balance > 0);
   const debitParties = filteredParties.filter(p => p.balance < 0);
   const zeroParties = filteredParties.filter(p => p.balance === 0);
@@ -287,11 +289,11 @@ const BalanceSheet = () => {
       {/* Main Trial Balance Two Panels Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start sheet-panels-grid print:hidden">
         
-        {/* ================= LEFT SIDE: CREDIT / JAMA / DENA ================= */}
+        {/* ================= LEFT SIDE: CREDIT / PAYABLE ================= */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] shadow-sm overflow-hidden flex flex-col h-full print:border-slate-800 print:rounded-none transition-colors duration-200">
           {/* Header */}
           <div className="px-6 py-4 bg-emerald-50/50 dark:bg-emerald-950/20 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center print:bg-slate-100 print:border-slate-800">
-            <h2 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">Credit / Jama / Dena Accounts</h2>
+            <h2 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">Credit / Payable Accounts</h2>
           </div>
 
           {/* Sub-columns container */}
@@ -314,7 +316,7 @@ const BalanceSheet = () => {
                           {p.party_name}
                         </td>
                         <td className="py-2 text-right text-emerald-600 dark:text-emerald-455 font-extrabold">
-                          ₹ {p.balance.toLocaleString('en-IN')}
+                          {currencySymbol || '₹'} {p.balance.toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}
                         </td>
                       </tr>
                     ))}
@@ -343,7 +345,7 @@ const BalanceSheet = () => {
                           {p.party_name}
                         </td>
                         <td className="py-2 text-right text-emerald-600 dark:text-emerald-455 font-extrabold">
-                          ₹ {p.balance.toLocaleString('en-IN')}
+                          {currencySymbol || '₹'} {p.balance.toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}
                         </td>
                       </tr>
                     ))}
@@ -373,7 +375,7 @@ const BalanceSheet = () => {
                         {p.party_name}
                       </td>
                       <td className="py-2 text-right text-emerald-600 dark:text-emerald-455 font-extrabold">
-                        ₹ {p.balance.toLocaleString('en-IN')}
+                        {currencySymbol || '₹'} {p.balance.toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}
                       </td>
                     </tr>
                   ))}
@@ -414,16 +416,16 @@ const BalanceSheet = () => {
 
           {/* Footer Total */}
           <div className="px-6 py-4 bg-emerald-600 dark:bg-emerald-900 text-white font-black text-lg flex justify-between items-center tracking-tight print:bg-emerald-600 print:text-white print:border-t print:border-emerald-700">
-            <span>Credit / Jama / Dena Total</span>
-            <span>₹ {totalCredit.toLocaleString('en-IN')}</span>
+            <span>Total Credit (Payable)</span>
+            <span>{currencySymbol || '₹'} {totalCredit.toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</span>
           </div>
         </div>
 
-        {/* ================= RIGHT SIDE: DEBIT / NAME / LENA ================= */}
+        {/* ================= RIGHT SIDE: DEBIT / RECEIVABLE ================= */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] shadow-sm overflow-hidden flex flex-col h-full print:border-slate-800 print:rounded-none transition-colors duration-200">
           {/* Header */}
           <div className="px-6 py-4 bg-rose-50/50 dark:bg-rose-950/10 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center print:bg-slate-100 print:border-slate-800">
-            <h2 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">Debit / Name / Lena Accounts</h2>
+            <h2 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">Debit / Receivable Accounts</h2>
           </div>
 
           {/* Sub-columns container */}
@@ -446,7 +448,7 @@ const BalanceSheet = () => {
                           {p.party_name}
                         </td>
                         <td className="py-2 text-right text-rose-600 dark:text-rose-455 font-extrabold">
-                          ₹ {Math.abs(p.balance).toLocaleString('en-IN')}
+                          {currencySymbol || '₹'} {Math.abs(p.balance).toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}
                         </td>
                       </tr>
                     ))}
@@ -475,7 +477,7 @@ const BalanceSheet = () => {
                           {p.party_name}
                         </td>
                         <td className="py-2 text-right text-rose-600 dark:text-rose-455 font-extrabold">
-                          ₹ {Math.abs(p.balance).toLocaleString('en-IN')}
+                          {currencySymbol || '₹'} {Math.abs(p.balance).toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}
                         </td>
                       </tr>
                     ))}
@@ -505,7 +507,7 @@ const BalanceSheet = () => {
                         {p.party_name}
                       </td>
                       <td className="py-2 text-right text-rose-600 dark:text-rose-455 font-extrabold">
-                        ₹ {Math.abs(p.balance).toLocaleString('en-IN')}
+                        {currencySymbol || '₹'} {Math.abs(p.balance).toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}
                       </td>
                     </tr>
                   ))}
@@ -546,8 +548,8 @@ const BalanceSheet = () => {
 
           {/* Footer Total */}
           <div className="px-6 py-4 bg-rose-600 dark:bg-rose-900 text-white font-black text-lg flex justify-between items-center tracking-tight print:bg-rose-600 print:text-white print:border-t print:border-rose-700">
-            <span>Debit / Name / Lena Total</span>
-            <span>₹ {Math.abs(totalDebit).toLocaleString('en-IN')}</span>
+            <span>Total Debit (Receivable)</span>
+            <span>{currencySymbol || '₹'} {Math.abs(totalDebit).toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</span>
           </div>
         </div>
 
@@ -558,7 +560,7 @@ const BalanceSheet = () => {
         {/* ================= PRINT CREDIT PANEL ================= */}
         <div className="border-2 border-slate-800 flex flex-col h-full">
           <div className="px-4 py-2 bg-slate-100 border-b-2 border-slate-800 text-center">
-            <h2 className="text-sm font-black text-slate-900 uppercase">Credit / Jama / Dena Accounts</h2>
+            <h2 className="text-sm font-black text-slate-900 uppercase">Credit / Payable Accounts</h2>
           </div>
           <div className="p-3 grid grid-cols-2 gap-4 flex-grow divide-x-2 divide-slate-300">
             <div className="pr-1">
@@ -573,7 +575,7 @@ const BalanceSheet = () => {
                   {creditParties.slice(0, Math.ceil(creditParties.length / 2)).map(p => (
                     <tr key={p.id}>
                       <td className="py-1 text-slate-900 max-w-[110px] truncate">{p.party_name}</td>
-                      <td className="py-1 text-right text-slate-900 font-extrabold">₹ {p.balance.toLocaleString('en-IN')}</td>
+                      <td className="py-1 text-right text-slate-900 font-extrabold">{currencySymbol || '₹'} {p.balance.toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -591,7 +593,7 @@ const BalanceSheet = () => {
                   {creditParties.slice(Math.ceil(creditParties.length / 2)).map(p => (
                     <tr key={p.id}>
                       <td className="py-1 text-slate-900 max-w-[110px] truncate">{p.party_name}</td>
-                      <td className="py-1 text-right text-slate-900 font-extrabold">₹ {p.balance.toLocaleString('en-IN')}</td>
+                      <td className="py-1 text-right text-slate-900 font-extrabold">{currencySymbol || '₹'} {p.balance.toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -600,14 +602,14 @@ const BalanceSheet = () => {
           </div>
           <div className="px-4 py-2 bg-emerald-600 text-white font-black text-xs flex justify-between items-center border-t-2 border-emerald-700">
             <span>Credit Total</span>
-            <span>₹ {totalCredit.toLocaleString('en-IN')}</span>
+            <span>{currencySymbol || '₹'} {totalCredit.toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</span>
           </div>
         </div>
 
         {/* ================= PRINT DEBIT PANEL ================= */}
         <div className="border-2 border-slate-800 flex flex-col h-full">
           <div className="px-4 py-2 bg-slate-100 border-b-2 border-slate-800 text-center">
-            <h2 className="text-sm font-black text-slate-900 uppercase">Debit / Name / Lena Accounts</h2>
+            <h2 className="text-sm font-black text-slate-900 uppercase">Debit / Receivable Accounts</h2>
           </div>
           <div className="p-3 grid grid-cols-2 gap-4 flex-grow divide-x-2 divide-slate-300">
             <div className="pr-1">
@@ -622,7 +624,7 @@ const BalanceSheet = () => {
                   {debitParties.slice(0, Math.ceil(debitParties.length / 2)).map(p => (
                     <tr key={p.id}>
                       <td className="py-1 text-slate-900 max-w-[110px] truncate">{p.party_name}</td>
-                      <td className="py-1 text-right text-slate-900 font-extrabold">₹ {Math.abs(p.balance).toLocaleString('en-IN')}</td>
+                      <td className="py-1 text-right text-slate-900 font-extrabold">{currencySymbol || '₹'} {Math.abs(p.balance).toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -640,7 +642,7 @@ const BalanceSheet = () => {
                   {debitParties.slice(Math.ceil(debitParties.length / 2)).map(p => (
                     <tr key={p.id}>
                       <td className="py-1 text-slate-900 max-w-[110px] truncate">{p.party_name}</td>
-                      <td className="py-1 text-right text-slate-900 font-extrabold">₹ {Math.abs(p.balance).toLocaleString('en-IN')}</td>
+                      <td className="py-1 text-right text-slate-900 font-extrabold">{currencySymbol || '₹'} {Math.abs(p.balance).toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -649,7 +651,7 @@ const BalanceSheet = () => {
           </div>
           <div className="px-4 py-2 bg-rose-600 text-white font-black text-xs flex justify-between items-center border-t-2 border-rose-700">
             <span>Debit Total</span>
-            <span>₹ {Math.abs(totalDebit).toLocaleString('en-IN')}</span>
+            <span>{currencySymbol || '₹'} {Math.abs(totalDebit).toLocaleString(currencyCode === 'INR' ? 'en-IN' : 'en-US')}</span>
           </div>
         </div>
       </div>
